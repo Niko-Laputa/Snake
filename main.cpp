@@ -8,8 +8,6 @@ int main()
 
 	//构建界面
     interface.Make();
-	//初始化
-	function.InitializeSnake();
 	//进行游戏
 	while(function.CarryOut(interface));
 	//回收界面

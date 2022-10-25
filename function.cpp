@@ -1,8 +1,9 @@
 #include"function.h"
+#include"interface.h"
 #include"process.h"
 
 //进行一回合
-int Function::CarryOut(Interface interface)
+int Function::CarryOut(Interface &interface)
 {
 	//打印地图
 	interface.InputMap(map);
@@ -11,7 +12,7 @@ int Function::CarryOut(Interface interface)
 	//改变蛇的状态
     snake.SetMove(operate);
 	//记录修改信息,并判断是否退出
-    if(!Record())
+    if(!Record(interface))
 	{
 		return 0;
 	}
@@ -19,7 +20,7 @@ int Function::CarryOut(Interface interface)
 }
 
 //判断是否可以进行并进行修改
-int Function::Record()
+int Function::Record(Interface &interface)
 {
 	int judge=0;
 	//读取蛇头下一步位置的地图信息
@@ -28,11 +29,24 @@ int Function::Record()
 
 	//判断蛇应进行的行为,地图的修改应在蛇修改之前。
     if(type==SWELL||type==SSNAKE){judge=0;}
-	if(type==SEMPTY)
+	else if(type==SEMPTY)
 	{
 		judge=1;
 		map.Move(snake);
 		snake.Move();
+	}
+	else if(type==SADDSNAKE)
+	{
+        judge=1;
+		map.AddMove(snake);
+		snake.AddMove();
+		InitializeAdd();
+		
+		int time=interface.Time();
+		if(time>=10)
+		{
+			interface.SetTime(time-10);
+		}
 	}
 
 	return judge;
@@ -53,6 +67,17 @@ void Function::InitializeSnake()
 	}
 
 }
+//初始化添加道具
+void Function::InitializeAdd()
+{
+    //获取随机点
+	Point point=map.Rand();
+
+	//添加入地图
+    map.RevisePoint(point,ADDSNAKE);
+
+}
+
 //蛇的状态类
 
 //构造函数
@@ -62,8 +87,9 @@ Snake::Snake()
 	move=RIGHT;
 
 	//默认长度和位置
-    Point point1(1,1),point2(2,1),point3(3,1);
-    position.push_back(point3);
+    Point point1(1,1),point2(2,1),point3(3,1),point4(4,1);
+    position.push_back(point4);
+	position.push_back(point3);
 	position.push_back(point2);
 	position.push_back(point1);
 }
@@ -96,6 +122,8 @@ void Snake::SetMove(char operate)
 		case 'a':move=LEAFT;break;
 
 		case 'd':move=RIGHT;break;
+
+	    case ' ':getchar();break;
 	}
 }
 
@@ -108,6 +136,17 @@ void Snake::Move()
     //进行移动
     position.pop_back();
 	position.insert(position.begin(),head);
+}
+
+//蛇进行添加运动
+void Snake::AddMove()
+{
+	//获取蛇头的位置
+	Point head=NextHead();
+
+    //进行移动
+	position.insert(position.begin(),head);
+	
 }
 
 //地图类
@@ -181,6 +220,8 @@ MapType Map::Read(Point point)
 		case SNAKE_HEAD: input=SSNAKE_HEAD;break;
 
 		case SNAKE: input=SSNAKE;break;
+
+		case ADDSNAKE: input=SADDSNAKE;break;
     }
 
 	return input;
@@ -203,4 +244,28 @@ void Map::Move(Snake snake)
 	RevisePoint(new_head,SNAKE_HEAD);
 	RevisePoint(old_head,SNAKE);
 	RevisePoint(end,EMPTY);
+}
+//蛇添加运动后地图的变化
+void Map::AddMove(Snake snake)
+{
+    int number=snake.Number();
+	Point point=Rand();
+	Point new_head=snake.NextHead(),end=snake.Position(number-1),old_head=snake.Position(0);
+    
+	RevisePoint(new_head,SNAKE_HEAD);
+	RevisePoint(old_head,SNAKE);
+	RevisePoint(point,WELL);
+}
+//创建随机点
+Point Map::Rand()
+{
+	Point point(0,0);
+    
+	while(Read(point)!=SEMPTY)
+	{
+	    point.SetX(rand()%length);
+		point.SetY(rand()%width);
+	}
+
+	return point;
 }

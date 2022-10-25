@@ -1,9 +1,8 @@
-#ifndef _FUNCTION_ 
-#define _FUNCTION_
+#ifndef _PROCESS_ 
+#define _PROCESS_
 
 #include<vector>
 #include<string>
-
 #include"point.h"
 
 using std::vector;
@@ -11,7 +10,6 @@ using std::string;
 
 
 //蛇类
-
 #define UP 0
 #define DOWN 1 
 #define LEAFT 2
@@ -33,6 +31,8 @@ class Snake
 		Point NextHead();
 		//蛇进行移动
     	void Move();
+		//蛇的添加运动
+		void AddMove();
 		//改变蛇的运动方向
     	void SetMove(char operate);
 	private:
@@ -44,9 +44,8 @@ class Snake
 };
 
 //地图类
-
 #define DEFAULTW 12
-#define DEFAULTL 50
+#define DEFAULTL 35
 #define EMPTY 0
 #define SEMPTY " "
 #define WELL 1
@@ -55,6 +54,8 @@ class Snake
 #define SSNAKE "o"
 #define SNAKE_HEAD 3
 #define SSNAKE_HEAD "@"
+#define ADDSNAKE 4
+#define SADDSNAKE "#"
 
 typedef string MapType;
 
@@ -71,10 +72,14 @@ class Map
 		int RevisePoint(Point point,int type);
 		//蛇普通移动时地图的变化
         void Move(Snake snake);
+		//蛇添加移动时地图的变化
+	    void AddMove(Snake snake);
 		//读取宽度
 		int Width(){return width;}
 		//读取长度
         int Length(){return length;}
+		//创建随机点
+		Point Rand();
 	private:
 		//地图长度
 		int length;
@@ -87,4 +92,4 @@ class Map
 
 };
 
-#endif //_FUNCTION_
+#endif //_PROCESS_

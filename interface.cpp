@@ -3,7 +3,7 @@
 //构造函数
 Interface::Interface()
 {
-	time=800;
+	time=300;
 }
 
 //构造界面
@@ -15,6 +15,8 @@ void Interface::Make()
 	noecho();
 	//无缓存模式
 	cbreak();
+	//隐藏鼠标
+	curs_set(0);
 	//定时输入模式
 	timeout(time);
 
@@ -33,6 +35,8 @@ void Interface::InputMap(Map map)
 	//光标剧中
 	getmaxyx(stdscr,row,col);
 	
+    printw("%d\n",time);
+
 	for(int i=0;i<width;i++)
 	{
 		move((row-width)/2+i,(col-length)/2);
@@ -67,4 +71,10 @@ void Interface::Clear()
 
     sleep(2);
 	endwin();
+}
+
+//修改反应时间
+void Interface::SetTime(int new_time)
+{
+    time=new_time;
 }

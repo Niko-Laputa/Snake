@@ -18,6 +18,10 @@ class Interface
         char ReadOperate();
 		//回收界面
 		void Clear();
+	    //读取反应时间
+		int Time(){return time;}
+		//修改反应时间
+		void SetTime(int new_time);
     private:
 		//每一轮的反应速度
 	    int time;	
