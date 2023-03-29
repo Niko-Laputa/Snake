@@ -72,7 +72,6 @@ void Function::InitializeAdd()
 {
     //获取随机点
 	Point point=map.Rand();
-
 	//添加入地图
     map.RevisePoint(point,ADDSNAKE);
 
@@ -113,18 +112,42 @@ Point Snake::NextHead()
 //改变蛇的运动方向
 void Snake::SetMove(char operate)
 {
+	int new_move;
+	//操作词转化为蛇的运动方向
 	switch(operate)
 	{
-        case 'w':move=UP;break;
+        case 'w':new_move=UP;break;
 		   
-		case 's':move=DOWN;break;
+		case 's':new_move=DOWN;break;
 
-		case 'a':move=LEAFT;break;
+		case 'a':new_move=LEAFT;break;
 
-		case 'd':move=RIGHT;break;
+		case 'd':new_move=RIGHT;break;
 
+		//暂停
 	    case ' ':getchar();break;
 	}
+	//判断蛇的运动方向是否返回上一次的位置。
+	switch(new_move)
+	{
+		case UP:
+			if(move!=DOWN)
+			{move=new_move;}
+			break;
+		case DOWN:
+			if(move!=UP)
+			{move=new_move;}
+			break;
+		case LEAFT:
+			if(move!=RIGHT)
+			{move=new_move;}
+			break;
+		case RIGHT:
+			if(move!=LEAFT)
+			{move=new_move;}
+			break;
+	}
+
 }
 
 //蛇进行移动
@@ -254,6 +277,8 @@ void Map::AddMove(Snake snake)
     
 	RevisePoint(new_head,SNAKE_HEAD);
 	RevisePoint(old_head,SNAKE);
+
+	//添加障碍
 	RevisePoint(point,WELL);
 }
 //创建随机点

@@ -25,6 +25,7 @@ class Interface
     private:
 		//每一轮的反应速度
 	    int time;	
+		char old_operate;
 
 };
 
