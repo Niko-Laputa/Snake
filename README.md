@@ -6,7 +6,7 @@
 
 ``g++ *.cpp *.h -o snake -lncurses``
 
-#文件的说明
+# 文件的说明
 
 main.cpp文件是main函数所在文件。
 
